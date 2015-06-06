@@ -1,2 +1,2 @@
 # multi-select
-Multi select plugin
+Smart select plugin
