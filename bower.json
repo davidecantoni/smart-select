@@ -1,0 +1,22 @@
+{
+  "name": "smart-select",
+  "version": "1.0.0",
+  "homepage": "https://github.com/davidecantoni/smart-select",
+  "authors": [
+    "Davide Cantoni <dev@davidecantoni.ch>"
+  ],
+  "description": "smart select interface replacement",
+  "main": "src/smart-select.js",
+  "keywords": [
+    "select",
+    "library"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

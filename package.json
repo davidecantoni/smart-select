@@ -1,0 +1,30 @@
+{
+  "name": "smart-select",
+  "version": "1.0.0",
+  "description": "smart select interface replacement",
+  "main": "src/smart-select.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://davidecantoni@github.com/davidecantoni/smart-select.git"
+  },
+  "keywords": [
+    "select",
+    "library"
+  ],
+  "author": "Davide Cantoni <dev@davidecantoni.ch>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/davidecantoni/smart-select/issues"
+  },
+  "homepage": "https://github.com/davidecantoni/smart-select",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.2"
+  }
+}
