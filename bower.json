@@ -5,18 +5,25 @@
   "authors": [
     "Davide Cantoni <dev@davidecantoni.ch>"
   ],
-  "description": "smart select interface replacement",
-  "main": "src/smart-select.js",
+  "description": "Smart select is replacing and beautifying standard selects while keeping the interactions async",
+  "main": [
+    "dist/jquery.smart-select.js",
+    "dist/smart-select.css"
+  ],
   "keywords": [
     "select",
-    "library"
+    "multi-select",
+    "standalone",
+    "jquery",
+    "library",
+    "micro",
+    "smart"
   ],
   "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
-    "test",
     "tests"
   ]
 }
