@@ -1,0 +1,30 @@
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    line-height: 18px;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+.content {
+    margin: 30px auto;
+    max-width: 80%;
+}
+.select-block {
+    display: inline-block;
+    margin-bottom: 10px;
+    max-width: 20%;
+}
+.select-block span.info {
+    display: block;
+    margin-bottom: 10px;
+    color: grey;
+    font-size: 14px;
+    width: 90%;
+}
+/*for demonstration purpose only*/
+select {
+    display: block !important;
+}

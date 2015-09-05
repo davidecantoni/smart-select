@@ -21,6 +21,7 @@
     // Create the defaults once
     const pluginName = 'smartSelect';
     let defaults = {
+        wrapperClass: 'ms-parent',
         label: {
             standard      : 'Placeholder',
             countSelected : 'Selected',
@@ -72,24 +73,13 @@
          *
          **/
         _buildElement() {
-            // container
-            this.$container = $('<div' + ['class', 'title'].map((att) => {
-                    var attValue = this.$el.attr(att) || '';
-                    attValue = (att === 'class' ? ('ms-parent' + (attValue ? ' ' : '')) : '') + attValue;
-                    return attValue ? (' ' + att + '="' + attValue + '"') : '';
-                }).join('') + ' />');
-
-            // button
-            this.$button = $('<button type="button" class="ms-choice"><span></span><div></div></button>');
-
-            // dropdown
-            var multiple = this._defaults.multiple ? 'multiple' : '';
-            this.$dropdown = $('<div class="ms-drop ${multiple}"></div>');
+            this.$container = $(`<div class="${this.options.wrapperClass}"></div>`);
+            this.$button    = $(`<button type="button" class="ms-choice"><span></span><div></div></button>`);
+            this.$dropdown  = $(`<div class="ms-drop ${this._defaults.multiple ? 'multiple' : ''}"></div>`);
 
             // append
+            this.$container.append(this.$button).append(this.$dropdown);
             this.$el.after(this.$container);
-            this.$container.append(this.$button);
-            this.$container.append(this.$dropdown);
 
             // hide element
             this.$el.hide();
@@ -359,13 +349,13 @@
 
             if (this._defaults.multiple) {
                 // toggle specific one
-                this.$dropdown.find('li[data-value="${value}"]').toggleClass('selected');
+                this.$dropdown.find(`li[data-value="${value}"]`).toggleClass('selected');
             } else {
                 // remove specific one
                 this.$dropdown.find('li.selected').removeClass('selected');
 
                 // select specific one
-                this.$dropdown.find('li[data-value="${value}"]').addClass('selected');
+                this.$dropdown.find(`li[data-value="${value}"]`).addClass('selected');
             }
 
             // avoid infinitive loop
