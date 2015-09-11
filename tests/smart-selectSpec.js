@@ -51,14 +51,14 @@ describe("Smart select test suite", function() {
         $('body').append(HTML5_SKELETON);
 
         this.options = {
-            label: {
-                standard      : 'Placeholder',
-                countSelected : 'Selected',
-                allSelected   : 'All selected',
-                selectAll     : 'Select all',
-                unselectAll   : 'Unselect all'
+            "label": {
+                "standard"      : "Placeholder",
+                "countSelected" : "Selected",
+                "allSelected"   : "All selected",
+                "selectAll"     : "Select all",
+                "unselectAll"   : "Unselect all"
             },
-            toggler: true
+            "toggler": true
         };
 
         $('select').smartSelect(this.options);

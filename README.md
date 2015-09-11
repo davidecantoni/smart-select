@@ -49,13 +49,13 @@ Initialize the plugin
 
 ```json
 {
-    label: {
-        standard      : 'Placeholder',
-        countSelected : 'Selected',
-        allSelected   : 'All selected',
-        selectAll     : 'Select all',
-        unselectAll   : 'Unselect all'
+    "label": {
+        "standard"      : "Placeholder",
+        "countSelected" : "Selected",
+        "allSelected"   : "All selected",
+        "selectAll"     : "Select all",
+        "unselectAll"   : "Unselect all"
     },
-    toggler: true
+    "toggler": true
 } 
 ```
