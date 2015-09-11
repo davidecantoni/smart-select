@@ -1,6 +1,6 @@
 /*
- *  Smart select plugin - v1.0.0 - 2015-08-20
- *  https://github.com/davidecantoni/multiple-select
+ *  Smart select plugin - v0.1.1 - 2015-09-11
+ *  https://github.com/davidecantoni/smart-select
  *  Copyright (c) 2015 Davide Cantoni
  *
  */
@@ -27,15 +27,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     // Create the defaults once
     var pluginName = 'smartSelect';
     var defaults = {
+        toggleButton: false,
         wrapperClass: 'ms-parent',
-        label: {
-            standard: 'Placeholder',
-            countSelected: 'Selected',
-            allSelected: 'All selected',
-            selectAll: 'Select all',
-            unselectAll: 'Unselect all'
-        },
-        toggler: true
+        textStandard: 'Placeholder',
+        textCountSelected: '%d Selected',
+        textAllSelected: 'All selected',
+        textSelectAll: 'Select all',
+        textUnselectAll: 'Unselect all'
     };
 
     // The actual plugin constructor
@@ -44,7 +42,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         function Plugin(element, new_options) {
             _classCallCheck(this, Plugin);
 
-            this.el = element;
+            //this.el  = element;
             this.$el = this.$el = $(element);
 
             this.$container = '';
@@ -58,7 +56,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             this._defaults = {
                 multiple: false
             };
-            this._name = pluginName;
+            //this._name = pluginName;
 
             // check if multiple or not
             this._defaults.multiple = !!this.$el.attr('multiple');
@@ -144,7 +142,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 var html = '<ul>';
                 if (this._defaults.multiple && this.options.toggler) {
-                    html += '\n                <li class="select-toggle" data-value="" data-translate-toggle="' + this.options.label.unselectAll + '">\n                    ' + this.options.label.selectAll + '\n                </li>';
+                    html += '\n                <li class="select-toggle" data-value="" data-translate-toggle="' + this.options.textUnselectAll + '">\n                    ' + this.options.textSelectAll + '\n                </li>';
                 }
                 this._resetSelectedValue();
 
@@ -221,7 +219,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 if (this._defaults.multiple) {
                     // on init set item
-                    label = this.options.label.standard;
+                    label = this.options.textStandard;
 
                     var items = this.$dropdown.find('li:not(.select-toggle)');
                     if (this.options.toggler) {
@@ -229,9 +227,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
                     }
 
                     if (this.selectedValue.length >= 2 && this.selectedValue.length < items.length) {
-                        label = this.selectedValue.length + ' ' + this.options.label.countSelected;
+                        label = this.options.textCountSelected.replace('%d', this.selectedValue.length);
                     } else if (this.selectedValue.length === items.length) {
-                        label = this.options.label.allSelected;
+                        label = this.options.textAllSelected;
                         // toggle label
                         if (this.options.toggler) {
                             this._setToggleLabel(true);
