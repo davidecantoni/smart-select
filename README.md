@@ -59,3 +59,8 @@ Initialize the plugin
     "toggler": true
 } 
 ```
+
+### Changelog
+
+#### v0.1.0 2015-09-11
+Initial release
