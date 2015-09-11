@@ -1,0 +1,31 @@
+{
+    "name": "smart-select",
+    "title": "Smart Select",
+    "description": "Smart select is replacing and beautifying standard selects while keeping them async",
+    "keywords": [
+        "select",
+        "multi-select",
+        "standalone",
+        "jquery",
+        "library",
+        "micro",
+        "smart"
+    ],
+    "version": "0.1.0",
+    "author": {
+        "name": "Davide Cantoni",
+        "url": "https://github.com/davidecantoni"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://www.opensource.org/licenses/mit-license.php"
+        }
+    ],
+    "bugs": "https://github.com/davidecantoni/smart-select/issues",
+    "docs": "https://github.com/davidecantoni/smart-select#readme",
+    "download": "https://github.com/davidecantoni/smart-select/archive/master.zip",
+    "dependencies": {
+        "jquery": ">=1.4"
+    }
+}
