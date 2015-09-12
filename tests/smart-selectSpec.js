@@ -38,7 +38,7 @@ describe("Smart select test suite", function() {
     </div>
 
     <div class="select-block">
-        <span class="info">Cars multi-select with string as values</span>
+        <span class="info">Cars multi-select with string as values and an empty value</span>
         <select class="cars" multiple>
             <option value="porsche" selected>Porsche</option>
             <option value="ferrari">Ferrari</option>
