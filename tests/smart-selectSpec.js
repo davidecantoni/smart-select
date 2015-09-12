@@ -42,8 +42,8 @@ describe("Smart select test suite", function() {
         <select class="cars" multiple>
             <option value="porsche" selected>Porsche</option>
             <option value="ferrari">Ferrari</option>
-            <option value="lamborgini">Lamborgini</option>
-            <option value="">Lotus</option>
+            <option value="lamborghini">Lamborghini</option>
+            <option value="">Audi</option>
         </select>
     </div>
 </div>`;
