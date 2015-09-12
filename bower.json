@@ -1,29 +1,40 @@
 {
-  "name": "smart-select",
-  "version": "0.1.0",
-  "homepage": "https://github.com/davidecantoni/smart-select",
-  "authors": [
-    "Davide Cantoni <dev@davidecantoni.ch>"
-  ],
-  "description": "Smart select is replacing and beautifying standard selects while keeping them async",
-  "main": [
-    "dist/jquery.smart-select.js",
-    "dist/smart-select.css"
-  ],
-  "keywords": [
-    "select",
-    "multi-select",
-    "standalone",
-    "jquery",
-    "library",
-    "micro",
-    "smart"
-  ],
-  "license": "MIT",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "tests"
-  ]
+    "name": "smart-select",
+    "description": "Smart select is replacing and beautifying standard selects while keeping them async",
+    "main": [
+        "dist/css/smart-select.min.css",
+        "dist/js/smart-select.min.js"
+    ],
+    "moduleType": [
+        "globals",
+        "adm",
+        "node"
+    ],
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "tests",
+        "helper"
+    ],
+    "keywords": [
+        "select",
+        "multi-select",
+        "standalone",
+        "jquery",
+        "library",
+        "micro",
+        "smart"
+    ],
+    "authors": [
+        { "name": "Davide Cantoni", "email": "dev@davidecantoni.ch" }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/davidecantoni/smart-select.git"
+    },
+    "dependencies": {
+        "jquery": ">=1.9"
+    }
 }
