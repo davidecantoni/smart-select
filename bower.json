@@ -16,7 +16,10 @@
         "node_modules",
         "bower_components",
         "tests",
-        "helper"
+        "helper",
+        "gulpfile.js",
+        "karma.conf.js",
+        "smartSelect.jquery.json"
     ],
     "keywords": [
         "select",
