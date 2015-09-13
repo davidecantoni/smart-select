@@ -2,7 +2,7 @@
 
 ![Demo](http://i.imgur.com/8E6m5NQ.gif)
 
-Note: For demo purpose the native selects on the top are visible.
+> For demo purpose the native selects on the top are visible.
 
 Smart select is a ES6 based plugin which beautifies native selects.
 As we know, native selects are looking different in various browsers:
