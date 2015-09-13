@@ -20,6 +20,7 @@
             <option value="2">India</option>
             <option value="3">Brazil</option>
         </select>
+        <div class="val">Selected value: <small></small></div>
     </div>
 
     <div class="select-block">
@@ -30,6 +31,7 @@
             <option value="2">Meat</option>
             <option value="3" selected>Salad</option>
         </select>
+        <div class="val">Selected value: <small></small></div>
     </div>
 
     <div class="select-block">
@@ -41,6 +43,7 @@
             <option value="fred">Fred</option>
             <option value="hans">Hans</option>
         </select>
+        <div class="val">Selected value: <small></small></div>
     </div>
 
     <div class="select-block">
@@ -51,6 +54,7 @@
             <option value="lamborghini">Lamborghini</option>
             <option value="">Audi</option>
         </select>
+        <div class="val">Selected value: <small></small></div>
     </div>
 </div>
 
@@ -69,6 +73,13 @@
         };
 
         $('select').smartSelect(this.options);
+        $('select').on('change', function() {
+            var value = $(this).val();
+            if ($.isArray(value)) {
+                value = value.join();
+            }
+            $(this).parent().find('.val small').html(value);
+        });
     </script>
 </body>
 </html>

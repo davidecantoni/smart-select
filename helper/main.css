@@ -16,15 +16,38 @@ h1 {
     display: inline-block;
     margin-bottom: 10px;
     max-width: 20%;
+    float: left;
 }
-.select-block span.info {
+.select-block span.info,
+.select-block .val {
     display: block;
     margin-bottom: 10px;
     color: grey;
     font-size: 14px;
     width: 90%;
 }
+select {
+    height: 35px;
+    width: 90%;
+    overflow: hidden;
+    color: #333333;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAIAAAA7N+mxAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAIJJREFUeNqk0qEKwCAQBuC5arLbfQQf3GKyW0w+gsliWrG4Q0FkHjvYfrD9H8qdrLV2fM0JJ8Zora21oo2UkjEm54zjq8c5t3uQ3vvag2OttZRy90POAo5RT0oIWwcGbTCcc6VUCOFdPvH063OIaa+ZgJTIzSOlFCEEuWf255PcAgwA2etl0cvCSYUAAAAASUVORK5CYII=');
+    border: 1px solid #C0C0C0;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-position: right center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 5px 20px 5px 8px;
+    font-size: 14px;
+    outline: none;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
 /*for demonstration purpose only*/
 select {
     display: block !important;
+}
+.ms-parent {
+    margin-bottom: 10px;
 }
