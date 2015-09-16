@@ -82,7 +82,6 @@ describe("Smart select test suite", function() {
     describe("Country select with numbers as values", function() {
         it('should select value', function () {
 
-            //https://github.com/usablica/intro.js/blob/master/intro.js
             // display the drop-down
             this.country.next('.ms-parent').find('button').click();
 
@@ -94,13 +93,12 @@ describe("Smart select test suite", function() {
 
             // select India as a country
             this.country.next('.ms-parent').find('.ms-drop li[data-value=2]').click();
-            this.country.next('.ms-parent').find('.ms-drop').click();
 
             // select should has India as a country
-            //expect(this.country.next('.ms-parent').find('button').text()).toBe('India');
+            expect(this.country.next('.ms-parent').find('button').text()).toBe('India');
         });
 
-        /*it('should select value with 0', function () {
+        it('should select value with 0', function () {
 
             // check the initial value
             expect(this.country.next('.ms-parent').find('button').text()).toBe('India');
@@ -120,7 +118,7 @@ describe("Smart select test suite", function() {
             expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
 
             // display the drop-down
-            this.country.next('.ms-parent').find('button').click();
+            /*this.country.next('.ms-parent').find('button').click();
 
             // drop-down should be visible
             expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(true);
@@ -131,8 +129,8 @@ describe("Smart select test suite", function() {
             // drop-down should be hidden
             expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
 
-            this.country.next('.ms-parent').find('button').click();
-        });*/
+            this.country.next('.ms-parent').find('button').click();*/
+        });
     });
 
 

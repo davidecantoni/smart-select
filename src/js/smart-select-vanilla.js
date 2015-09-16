@@ -81,6 +81,7 @@
             this.button.appendChild(document.createElement('div'));
 
             this.dropdown = document.createElement('div');
+            this.dropdown.id = 'test';
             this.dropdown.className = `ms-drop${this._defaults.multiple ? ' multiple' : ''}`;
 
             // append
@@ -160,7 +161,6 @@
             }
             this.el.value = this.selectedValue;
 
-
             // insert into dropdown
             this.dropdown.innerHTML = html;
 
@@ -194,18 +194,20 @@
             });
 
             // close if clicked outside
-            /*document.getElementsByTagName('body')[0].addEventListener('click', (e) => {
+            document.getElementsByTagName('body')[0].onclick = (e) => {
                 var div = this.button.querySelector('div');
                 if (div && div.classList.contains('open')) {
-                    if ($(e.target)[0] === this.button[0] ||
-                        $(e.target).parents('.ms-choice')[0] === this.button[0]) {
-                    } else if ($(e.target)[0] === this.dropdown[0] ||
-                        $(e.target).parents('.ms-drop')[0] === this.dropdown[0]) {
+                    if (e.target.isSameNode(this.button) ||
+                        e.target.parentElement.isSameNode(this.button)
+                    ) {
+                    } else if (e.target.isSameNode(this.button) ||
+                        e.target.parentElement.isSameNode(this.dropdown)
+                    ) {
                     } else {
                         this._toggleList(false);
                     }
                 }
-            });*/
+            };
         }
 
         _setLabel() {
@@ -284,45 +286,41 @@
 
             // items
             // TODO: convert to arrow funtions
-            //this.dropdown.removeEventListener('click', null);
-            console.log($('.country').next('.ms-parent').find('.ms-drop').click());
-
-            this.dropdown.addEventListener('click', function(e) {
-                console.log(e);
-                if(e.target && e.target.nodeName == "LI") {
-                    // List item found!  Output the ID!
-                    console.log("List item ", e.target.id.replace("post-"), " was clicked!");
+            this.dropdown.onclick = function(e) {
+                // If it was a list item and not select toggler
+                if(e.target &&
+                    e.target.nodeName == "LI" &&
+                    !e.target.classList.contains("select-toggle")
+                ) {
+                    // single / multiple select
+                    self._updateSelected(e.target.getAttribute("data-value"));
                 }
-
-                //:not(.select-toggle)
-                /*// single / multiple select
-                self._updateSelected($(this).data('value'));
 
                 // if single close drowdown
                 if (!self._defaults.multiple) {
                     self._toggleList(false);
-                }*/
-            });
+                }
+            };
 
             // items toggler
-            /*if (this._defaults.multiple && this.options.toggler) {
-                this.$toggler.off('click').on('click', () => {
+            if (this._defaults.multiple && this.options.toggler) {
+                this.toggler.onclick = () => {
                     // select or unselect all items
                     this._toggleAll();
-                });
-            }*/
+                };
+            }
         }
 
         _toggleAll() {
-            if (this.$toggler.hasClass('selected')) {
+            if (this.toggler.classList.contains('selected')) {
                 // empty array
                 this._resetSelectedValue();
 
                 // set value to original select
-                this.$el.val([]);
+                this.el.val([]);
 
                 // unselect all list items
-                this.$dropdown.find('li:not(.select-toggle)').removeClass('selected');
+                this.dropdown.find('li:not(.select-toggle)').removeClass('selected');
 
                 // toggle label
                 this._setToggleLabel(false);
@@ -396,7 +394,7 @@
             this._setSelectedValue(value);
 
             // set value to original select
-            this.$el.val(this.selectedValue);
+            this.el.value = this.selectedValue;
 
             // change button label
             this._setLabel();
@@ -406,17 +404,19 @@
                 this.$dropdown.find(`li[data-value="${value}"]`).toggleClass('selected');
             } else {
                 // remove specific one
-                this.$dropdown.find('li.selected').removeClass('selected');
+                this.dropdown.querySelector('li[data-value="2"]').classList.remove('selected');
 
                 // select specific one
-                this.$dropdown.find(`li[data-value="${value}"]`).addClass('selected');
+                this.dropdown.querySelector(`li[data-value="${value}"]`).classList.add('selected');
             }
 
             // avoid infinitive loop
             this.changeListener = false;
 
             // trigger change
-            this.$el.change();
+            var e = document.createEvent('HTMLEvents');
+            e.initEvent('click', true, true);
+            this.el.change();
 
             // end avoid infinitive loop
             this.changeListener = true;
