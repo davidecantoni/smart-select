@@ -81,6 +81,8 @@
             this.button.appendChild(document.createElement('div'));
 
             this.dropdown = document.createElement('div');
+            //this is needed because js let you only know inline defined css properties
+            this.dropdown.style.display = 'none';
             this.dropdown.id = 'test';
             this.dropdown.className = `ms-drop${this._defaults.multiple ? ' multiple' : ''}`;
 
@@ -182,7 +184,8 @@
         _bindListener() {
 
             // listen on origin change and rebuild element
-            this.el.addEventListener('click', () => {
+            this.el.addEventListener('change', () => {
+                console.log('change original');
                 if (this.changeListener) {
                     this._syncOption();
                 }
@@ -190,24 +193,21 @@
 
             // button
             this.button.addEventListener('click', () => {
+                console.log('click button');
                 this._toggleList();
             });
 
             // close if clicked outside
-            document.getElementsByTagName('body')[0].onclick = (e) => {
+            document.addEventListener('click', (e) => {
                 var div = this.button.querySelector('div');
-                if (div && div.classList.contains('open')) {
-                    if (e.target.isSameNode(this.button) ||
-                        e.target.parentElement.isSameNode(this.button)
-                    ) {
-                    } else if (e.target.isSameNode(this.button) ||
-                        e.target.parentElement.isSameNode(this.dropdown)
-                    ) {
-                    } else {
-                        this._toggleList(false);
-                    }
+                console.log('document window', div.classList.contains('open'));
+
+                // trigger only if specific dropdown is open and event target is not present in container
+                if (div.classList.contains('open') && !this.container.contains(e.target)) {
+                    console.log('close it');
+                    this._toggleList(false);
                 }
-            };
+            });
         }
 
         _setLabel() {
@@ -285,14 +285,14 @@
             var self = this;
 
             // items
-            // TODO: convert to arrow funtions
-            this.dropdown.onclick = function(e) {
+            this.dropdown.addEventListener('click', (e) => {
                 // If it was a list item and not select toggler
                 if(e.target &&
                     e.target.nodeName == "LI" &&
                     !e.target.classList.contains("select-toggle")
                 ) {
                     // single / multiple select
+                    console.log('click dropdown');
                     self._updateSelected(e.target.getAttribute("data-value"));
                 }
 
@@ -300,14 +300,14 @@
                 if (!self._defaults.multiple) {
                     self._toggleList(false);
                 }
-            };
+            }, false);
 
             // items toggler
             if (this._defaults.multiple && this.options.toggler) {
-                this.toggler.onclick = () => {
+                this.toggler.addEventListener('click', () => {
                     // select or unselect all items
                     this._toggleAll();
-                };
+                });
             }
         }
 
@@ -358,35 +358,38 @@
         }
 
         _toggleList(state) {
-            // close all choice button class exept this one
-            var i = 0;
+            // close all choice button class except this one
             var buttons = document.querySelectorAll('button.ms-choice');
-            console.log(this.button.isSameNode(buttons[i]));
-            for (i = 0; i < buttons.length; i++) {
+            for (var i = 0; i < buttons.length; i++) {
                 if (!this.button.isSameNode(buttons[i])) {
-                    buttons[i].classList.toggle('open');
+                    buttons[i].classList.remove('open');
                 }
             }
 
             // close all drop downs except current one
-            var i = 0;
             var dropdowns = document.querySelectorAll('.ms-drop');
-            console.log(this.dropdown.isSameNode(dropdowns[i]));
-            for (i = 0; i < dropdowns.length; i++) {
+            for (var i = 0; i < dropdowns.length; i++) {
                 if (!this.dropdown.isSameNode(dropdowns[i])) {
-                    dropdowns[i].classList.toggle('open');
+                    //dropdowns[i].classList.remove('open');
+                    dropdowns[i].style.display = "none";
                 }
             }
 
-            // toggle choice button class
-            this.button.querySelector('div').classList.toggle('open');
-
-            // toggle dropdown
-            if (state) {
-                this.dropdown.classList.remove('open');
+            // if nothing defined, toggle choice button class and dropdown display status
+            console.log('state:', state);
+            if (typeof state === 'undefined') {
+                // toggle choice button class
+                this.button.querySelector('div').classList.toggle('open');
+                this.dropdown.style.display = (this.dropdown.style.display != 'none' ? 'none' : 'block' );
             } else {
-                this.dropdown.classList.add('open');
+                // set choice button class depending on the status
+                this.button.querySelector('div').classList.toggle('open', state);
+
+                // change display status of dropdown depending on the status
+                this.dropdown.style.display = (status ? 'block' : 'none' );
             }
+            console.log('dropdown', this.dropdown.style.display);
+
         }
 
         _updateSelected(value) {
@@ -401,10 +404,10 @@
 
             if (this._defaults.multiple) {
                 // toggle specific one
-                this.$dropdown.find(`li[data-value="${value}"]`).toggleClass('selected');
+                this.dropdown.querySelector(`li[data-value="${value}"]`).classList.toggle('selected');
             } else {
                 // remove specific one
-                this.dropdown.querySelector('li[data-value="2"]').classList.remove('selected');
+                this.dropdown.querySelector('li.selected').classList.remove('selected');
 
                 // select specific one
                 this.dropdown.querySelector(`li[data-value="${value}"]`).classList.add('selected');
@@ -415,8 +418,9 @@
 
             // trigger change
             var e = document.createEvent('HTMLEvents');
-            e.initEvent('click', true, true);
-            this.el.change();
+            e.initEvent('change', true, true);
+
+            this.el.dispatchEvent(e);
 
             // end avoid infinitive loop
             this.changeListener = true;
@@ -430,6 +434,17 @@
             }
             return origin;
         }
+
+        /*_addEvent(evnt, elem, func) {
+            if (elem.addEventListener)  // W3C DOM
+                elem.addEventListener(evnt,func,false);
+            else if (elem.attachEvent) { // IE DOM
+                elem.attachEvent("on"+evnt, func);
+            }
+            else { // No much to do
+                elem[evnt] = func;
+            }
+        }*/
 
         refresh() {
             this._syncOption();

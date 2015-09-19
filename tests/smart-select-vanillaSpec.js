@@ -63,6 +63,10 @@ describe("Smart select test suite", function() {
 
         smartSelect('select', this.options);
 
+        // jquery click event doesnt work on addEventListener
+        this.event = document.createEvent('HTMLEvents');
+        this.event.initEvent('click', true, true);
+
         this.country = $('.country');
         this.food    = $('.food');
         this.names   = $('.names');
@@ -83,16 +87,16 @@ describe("Smart select test suite", function() {
         it('should select value', function () {
 
             // display the drop-down
-            this.country.next('.ms-parent').find('button').click();
+            this.country.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // check the initial value
             expect(this.country.next('.ms-parent').find('button span').text()).toBe('Switzerland');
 
             // display the drop-down
-            this.country.next('.ms-parent').find('button').click();
+            this.country.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // select India as a country
-            this.country.next('.ms-parent').find('.ms-drop li[data-value=2]').click();
+            this.country.next('.ms-parent').find('.ms-drop li[data-value=2]').get(0).dispatchEvent(this.event);
 
             // select should has India as a country
             expect(this.country.next('.ms-parent').find('button').text()).toBe('India');
@@ -104,10 +108,10 @@ describe("Smart select test suite", function() {
             expect(this.country.next('.ms-parent').find('button').text()).toBe('India');
 
             // display the drop-down
-            this.country.next('.ms-parent').find('button').click();
+            this.country.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // select India as a country
-            this.country.next('.ms-parent').find('.ms-drop li[data-value=0]').click();
+            this.country.next('.ms-parent').find('.ms-drop li[data-value=0]').get(0).dispatchEvent(this.event);
 
             // select should has India as a country
             expect(this.country.next('.ms-parent').find('button').text()).toBe('Switzerland');
@@ -118,18 +122,21 @@ describe("Smart select test suite", function() {
             expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
 
             // display the drop-down
-            /*this.country.next('.ms-parent').find('button').click();
+            this.country.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // drop-down should be visible
             expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(true);
 
             // click outside the scope
-            $(window).click();
+            //$(window).get(0).dispatchEvent(this.event);
+
+            document.dispatchEvent(this.event);
 
             // drop-down should be hidden
-            expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
+            //console.log(this.country.next('.ms-parent').find('.ms-drop').get(0).style.display);
+            //expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
 
-            this.country.next('.ms-parent').find('button').click();*/
+            //this.country.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
         });
     });
 
