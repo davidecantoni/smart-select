@@ -61,28 +61,29 @@ describe("Smart select test suite", function() {
             "toggler": true
         };
 
-        smartSelect('select', this.options);
+
 
         // jquery click event doesnt work on addEventListener
         this.event = document.createEvent('HTMLEvents');
         this.event.initEvent('click', true, true);
 
         this.country = $('.country');
-        this.food    = $('.food');
-        this.names   = $('.names');
-        this.cars    = $('.cars');
+        new SmartSelect('select.country', this.options);
+
+        this.food = $('.food');
+        new SmartSelect('select.food', this.options);
+
+        this.names = $('.names');
+        new SmartSelect('select.names', this.options);
+
+        this.cars = $('.cars');
+        new SmartSelect('select.cars', this.options);
     });
 
     afterAll(function() {
         //$('select').smartSelect('destroy');
     });
 
-    describe("Country select with numbers as values", function() {
-        "use strict";
-        it('should select value', function () {
-
-        });
-    });
     describe("Country select with numbers as values", function() {
         it('should select value', function () {
 
@@ -128,9 +129,8 @@ describe("Smart select test suite", function() {
             expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(true);
 
             // click outside the scope
-            //$(window).get(0).dispatchEvent(this.event);
-
-            document.dispatchEvent(this.event);
+            $(window).get(0).dispatchEvent(this.event);
+            window.dispatchEvent(this.event);
 
             // drop-down should be hidden
             //console.log(this.country.next('.ms-parent').find('.ms-drop').get(0).style.display);
@@ -140,24 +140,22 @@ describe("Smart select test suite", function() {
         });
     });
 
-
-    /*describe("Food select with numbers as values and an empty value", function() {
+    describe("Food select with numbers as values and an empty value", function() {
         it('should select empty value', function () {
 
             // check the initial value
             expect(this.food.next('.ms-parent').find('button').text()).toBe('Salad');
 
             // display the drop-down
-            this.food.next('.ms-parent').find('button').click();
+            this.food.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // select India as a country
-            this.food.next('.ms-parent').find('.ms-drop li[data-value=""]').click();
+            this.food.next('.ms-parent').find('.ms-drop li[data-value=""]').get(0).dispatchEvent(this.event);
 
             // select should has India as a country
             expect(this.food.next('.ms-parent').find('button').text()).toBe('Tuna');
         });
     });
-
 
     describe("Name multi-select with string as values", function() {
         it('should select multiple values', function () {
@@ -166,11 +164,11 @@ describe("Smart select test suite", function() {
             expect(this.names.next('.ms-parent').find('button').text()).toBe('2 Selected');
 
             // display the drop-down
-            this.names.next('.ms-parent').find('button').click();
+            this.names.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // select multiple items
-            this.names.next('.ms-parent').find('.ms-drop li[data-value=marc]').click();
-            this.names.next('.ms-parent').find('.ms-drop li[data-value=fred]').click();
+            this.names.next('.ms-parent').find('.ms-drop li[data-value=marc]').get(0).dispatchEvent(this.event);
+            this.names.next('.ms-parent').find('.ms-drop li[data-value=fred]').get(0).dispatchEvent(this.event);
 
             // 4 items should be selected now
             expect(this.names.next('.ms-parent').find('button').text()).toBe('4 Selected');
@@ -179,10 +177,10 @@ describe("Smart select test suite", function() {
         it('should toggle (show) multiple values', function () {
 
             // display the drop-down
-            this.names.next('.ms-parent').find('button').click();
+            this.names.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // select multiple items
-            this.names.next('.ms-parent').find('.ms-drop li.select-toggle').click();
+            this.names.next('.ms-parent').find('.ms-drop li.select-toggle').get(0).dispatchEvent(this.event);
 
             // 4 items should be selected now
             expect(this.names.next('.ms-parent').find('button').text()).toBe(this.options.label.allSelected);
@@ -191,10 +189,10 @@ describe("Smart select test suite", function() {
         it('should toggle (hide) multiple values', function () {
 
             // display the drop-down
-            this.names.next('.ms-parent').find('button').click();
+            this.names.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // select multiple items
-            this.names.next('.ms-parent').find('.ms-drop li.select-toggle').click();
+            this.names.next('.ms-parent').find('.ms-drop li.select-toggle').get(0).dispatchEvent(this.event);
 
             // 4 items should be selected now
             expect(this.names.next('.ms-parent').find('button').text()).toBe(this.options.label.standard);
@@ -207,14 +205,13 @@ describe("Smart select test suite", function() {
             expect(this.cars.next('.ms-parent').find('button').text()).toBe('Porsche');
 
             // display the drop-down
-            this.cars.next('.ms-parent').find('button').click();
+            this.cars.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
 
             // select multiple items
-            //console.log( this.cars.next('.ms-parent').find('.ms-drop li[data-value=""]')[0].innerHTML);
-            //this.cars.next('.ms-parent').find('.ms-drop li[data-value=""]').click();
+            this.cars.next('.ms-parent').find('.ms-drop li[data-value=""]').get(0).dispatchEvent(this.event);
 
             // 2 items should be selected now
-            //expect(this.cars.next('.ms-parent').find('button').text()).toBe('2 Selected');
+            expect(this.cars.next('.ms-parent').find('button').text()).toBe('2 Selected');
         });
 
         it('should destroy the select', function () {
@@ -223,7 +220,36 @@ describe("Smart select test suite", function() {
             //this.cars.smartSelect('destroy');
 
             // 1 items should be selected now
-            expect(this.cars.val()).toContain("porsche");
+            //expect(this.cars.val()).toContain("porsche");
         });
-    });*/
+    });
+
+    describe("Public methods", function() {
+        it("should refresh select", function() {
+            new SmartSelect('select.country').refresh();
+        });
+
+        it("should destroy select", function() {
+            /*expect(this.country.next('.ms-parent').length).toBe(1);
+            expect(this.country.is(':visible')).toBe(false);
+            
+            new SmartSelect('select.country').destroy();
+            expect(this.country.next('.ms-parent').length).toBe(0);
+            expect(this.country.is(':visible')).toBe(true);*/
+        });
+    });
+
+    describe("Plugin should work with jQuery", function() {
+        it("Should initialize", function() {
+            $('.country').smartSelect(this.options);
+        });
+
+        it("Should refresh", function() {
+            $('.country').smartSelect('refresh');
+        });
+
+        it("Should be destroable", function() {
+            $('.country').smartSelect('destroy');
+        });
+    });
 });

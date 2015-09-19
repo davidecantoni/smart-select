@@ -19,8 +19,8 @@ module.exports = function(config) {
       'node_modules/normalize.css/normalize.css',
       'helper/main.css',
       'dist/css/smart-select.css',
-      'src/js/*.js',
-      'tests/*Spec.js'
+      'src/js/smart-select-vanilla.js',
+      'tests/smart-select-vanillaSpec.js'
     ],
 
 
@@ -61,7 +61,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'Firefox'],
+    browsers: ['Chrome', 'Firefox', 'Safari'],
 
 
     // Continuous Integration mode
@@ -80,4 +80,4 @@ module.exports = function(config) {
       }
     }
   })
-}
+};

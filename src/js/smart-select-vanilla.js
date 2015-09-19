@@ -20,6 +20,7 @@
 
     // Create the defaults once
     const pluginName = 'smartSelect';
+    //string.charAt(0).toUpperCase() + string.slice(1);
     let defaults = {
         toggleButton: false,
         wrapperClass: 'ms-parent',
@@ -30,12 +31,16 @@
         textUnselectAll  : 'Unselect all'
     };
 
+    let i = 0;
+
 
     // The actual plugin constructor
-    class Plugin {
+    class SmartSelect {
         constructor(element, new_options) {
 
-            this.el = element;
+            // querySelector if string
+            this.el = typeof element == 'string' ?
+                document.querySelector( element ) : element;
 
             this.container = '';
             this.button = '';
@@ -89,7 +94,8 @@
             // append
             this.container.appendChild(this.button);
             this.container.appendChild(this.dropdown);
-            this.el.insertAdjacentElement('afterend', this.container);
+            this.el.parentNode.insertBefore(this.container, this.el.nextSibling);
+            //this.el.insertAdjacentElement('afterend', this.container); doesn't work on FF
 
             // hide element
             this.el.style.display = 'none';
@@ -134,15 +140,14 @@
             let html = '<ul>';
             if (this._defaults.multiple && this.options.toggler) {
                 html += `
-                <li class="select-toggle" data-value="" data-translate-toggle="${this.options.textUnselectAll}">
+                <li class="select-toggle" data-translate-toggle="${this.options.textUnselectAll}">
                     ${this.options.textSelectAll}
                 </li>`;
             }
             this._resetSelectedValue();
 
             var options = this.el.querySelectorAll('option');
-            var i;
-            for (i = 0; i < options.length; i++) {
+            for (var i = 0; i < options.length; i++) {
                 var selected = '';
                 var option = options[i];
                 if (option.selected) {
@@ -157,7 +162,6 @@
             html += '</ul>';
 
             // reset all select items
-            var i;
             for (i = 0; i < this.el.options.length; i++) {
                 this.el.options[i].selected = false;
             }
@@ -167,8 +171,9 @@
             this.dropdown.innerHTML = html;
 
             if (this._defaults.multiple && this.options.toggler) {
-                this.toggler = this.dropdown.find('li.select-toggle');
+                this.toggler = this.dropdown.querySelector('li.select-toggle');
             }
+
 
             // set label
             this._setLabel();
@@ -185,7 +190,6 @@
 
             // listen on origin change and rebuild element
             this.el.addEventListener('change', () => {
-                console.log('change original');
                 if (this.changeListener) {
                     this._syncOption();
                 }
@@ -193,18 +197,15 @@
 
             // button
             this.button.addEventListener('click', () => {
-                console.log('click button');
                 this._toggleList();
             });
 
             // close if clicked outside
-            document.addEventListener('click', (e) => {
+            window.addEventListener('click', (e) => {
                 var div = this.button.querySelector('div');
-                console.log('document window', div.classList.contains('open'));
 
                 // trigger only if specific dropdown is open and event target is not present in container
-                if (div.classList.contains('open') && !this.container.contains(e.target)) {
-                    console.log('close it');
+                if (div.classList.contains('open') && e.target.parentNode != this.container) {
                     this._toggleList(false);
                 }
             });
@@ -215,7 +216,6 @@
             var label = this.el.options[0].text;
 
             // check if there is an empty value item and use it as default
-            var i = 0;
             for (i = 0; i < this.el.options.length; i++) {
                 if (this.el.options[i].value === "") {
                     label = this.el.options[i].text;
@@ -240,18 +240,16 @@
                         this._setToggleLabel(true);
                     }
                 } else if (this.selectedValue.length === 1) {
-                    label = this.$el.find('option[value="' + this.selectedValue[0] + '"]').text();
+                    label = this.el.querySelector('option[value="' + this.selectedValue[0] + '"]').text;
                 }
             } else {
                 if (this.selectedValue) {
-                    var i = 0;
                     for (i = 0; i < this.el.options.length; i++) {
                         if (this.el.options[i].value === this.selectedValue) {
                             label = this.el.options[i].text;
                         }
                     }
                 } else if (this.selectedValue === 0) {
-                    var i = 0;
                     for (i = 0; i < this.el.options.length; i++) {
                         if (this.el.options[i].value === "0") {
                             label = this.el.options[i].text;
@@ -265,40 +263,38 @@
 
         _setToggleLabel(status) {
             if (status) {
-                if (this.$toggler.hasClass('selected')) {
+                if (this.toggler.classList.contains('selected')) {
                     return;
                 }
             } else {
-                if (!this.$toggler.hasClass('selected')) {
+                if (!this.toggler.classList.contains('selected')) {
                     return;
                 }
             }
 
             // toggle class
-            this.$toggler.toggleClass('selected', status);
-            var text = this.$toggler.text();
-            this.$toggler.text(this.$toggler.data('translate-toggle'));
-            this.$toggler.data('translate-toggle', text);
+            this.toggler.classList.toggle('selected', status);
+            var text = this.toggler.textContent;
+            this.toggler.textContent = this.toggler.getAttribute('data-translate-toggle');
+            this.toggler.getAttribute('data-translate-toggle', text);
         }
 
         _bindEvent() {
-            var self = this;
-
             // items
             this.dropdown.addEventListener('click', (e) => {
                 // If it was a list item and not select toggler
+
                 if(e.target &&
                     e.target.nodeName == "LI" &&
                     !e.target.classList.contains("select-toggle")
                 ) {
                     // single / multiple select
-                    console.log('click dropdown');
-                    self._updateSelected(e.target.getAttribute("data-value"));
+                    this._updateSelected(e.target.getAttribute("data-value"));
                 }
 
                 // if single close drowdown
-                if (!self._defaults.multiple) {
-                    self._toggleList(false);
+                if (!this._defaults.multiple) {
+                    this._toggleList(false);
                 }
             }, false);
 
@@ -317,28 +313,28 @@
                 this._resetSelectedValue();
 
                 // set value to original select
-                this.el.val([]);
+                this.el.value = [];
 
                 // unselect all list items
-                this.dropdown.find('li:not(.select-toggle)').removeClass('selected');
+                this.dropdown.querySelector('li:not(.select-toggle)').classList.remove('selected');
 
                 // toggle label
                 this._setToggleLabel(false);
             } else {
                 var collection = [];
                 // select all option
-                // TODO arrow function
-                this.$el.find('option').each(function () {
-                    collection.push($(this).val());
-                });
+                var options = this.el.querySelectorAll('option');
+                for (i = 0; i < this.el.options.length; i++) {
+                    collection.push(options[i].value);
+                }
 
                 this.selectedValue = collection;
 
                 // set value to original select
-                this.$el.val(this.selectedValue);
+                this.el.value = this.selectedValue;
 
                 // select all list items
-                this.$dropdown.find('li:not(.select-toggle)').addClass('selected');
+                this.dropdown.querySelector('li:not(.select-toggle)').classList.add('selected');
 
                 // toggle label
                 this._setToggleLabel(true);
@@ -351,7 +347,9 @@
             this.changeListener = false;
 
             // trigger change
-            this.$el.change();
+            var event = document.createEvent('HTMLEvents');
+            event.initEvent('change', true, true);
+            this.el.dispatchEvent(event);
 
             // end avoid infinitive loop
             this.changeListener = true;
@@ -360,23 +358,21 @@
         _toggleList(state) {
             // close all choice button class except this one
             var buttons = document.querySelectorAll('button.ms-choice');
-            for (var i = 0; i < buttons.length; i++) {
-                if (!this.button.isSameNode(buttons[i])) {
+            for (i = 0; i < buttons.length; i++) {
+                if (!this.button == buttons[i]) {
                     buttons[i].classList.remove('open');
                 }
             }
 
             // close all drop downs except current one
             var dropdowns = document.querySelectorAll('.ms-drop');
-            for (var i = 0; i < dropdowns.length; i++) {
-                if (!this.dropdown.isSameNode(dropdowns[i])) {
-                    //dropdowns[i].classList.remove('open');
+            for (i = 0; i < dropdowns.length; i++) {
+                if (!this.dropdown == dropdowns[i]) {
                     dropdowns[i].style.display = "none";
                 }
             }
 
             // if nothing defined, toggle choice button class and dropdown display status
-            console.log('state:', state);
             if (typeof state === 'undefined') {
                 // toggle choice button class
                 this.button.querySelector('div').classList.toggle('open');
@@ -388,8 +384,6 @@
                 // change display status of dropdown depending on the status
                 this.dropdown.style.display = (status ? 'block' : 'none' );
             }
-            console.log('dropdown', this.dropdown.style.display);
-
         }
 
         _updateSelected(value) {
@@ -419,7 +413,6 @@
             // trigger change
             var e = document.createEvent('HTMLEvents');
             e.initEvent('change', true, true);
-
             this.el.dispatchEvent(e);
 
             // end avoid infinitive loop
@@ -451,72 +444,38 @@
         }
 
         destroy() {
-            this.$container.remove();
-            this.$el.show();
+            delete this.container;
+            this.el.style.display = 'block';
         }
     }
 
     // convert to a jquery plugin
-    var smartSelect = function (selector, options) {
-        if (typeof (selector) === 'object') {
-            //Ok, create a new instance
-            return new Plugin(selector);
+    if (window.jQuery) {
+        $.fn[pluginName] = function (options) {
+            var args = arguments;
 
-        } else if (typeof (selector) === 'string') {
-            //select the target element with query selector
-            var targetElement = document.querySelectorAll(selector);
+            if (options === undefined || typeof options === 'object') {
+                return this.each(function () {
+                    if (!$.data(this, 'plugin_' + pluginName)) {
+                        $.data(this, 'plugin_' + pluginName, new SmartSelect(this, options));
+                    }
+                });
+            } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+                var returns;
 
-            if (targetElement && targetElement.length > 1) {
-                var i;
-                for (i = 0; i < targetElement.length; i++) {
-                    return new Plugin(targetElement[i], options);
-                }
-            } else if (targetElement) {
-                return new Plugin(targetElement, options);
-            } else {
-                throw new Error('There is no element with given selector.');
+                this.each(function () {
+                    var instance = $.data(this, 'plugin_' + pluginName);
+                    if (typeof instance[options] === 'function') {
+                        returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+                    }
+                    if (options === 'destroy') {
+                        $.data(this, 'plugin_' + pluginName, null);
+                    }
+                });
+                return returns !== undefined ? returns : this;
             }
-        } else {
-            return new Plugin(document.body, options);
-        }
-    };
+        };
+    }
 
-    exports.smartSelect = smartSelect;
-    return smartSelect;
-
-
-    /*window[pluginName] = function (selector, options) {
-        var args = arguments;
-        var elements = document.querySelectorAll(selector);
-        console.log(selector);
-        console.log(elements.length);
-
-        console.log(document.querySelectorAll('select'));
-
-        if (options === undefined || typeof options === 'object') {
-
-            /!*forEach(elements, function (index, value) {
-                console.log(index, value); // passes index + value back!
-            });*!/
-            /!*
-            return this.each(function () {
-                if (!$.data(this, 'plugin_' + pluginName)) {
-                    $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
-                }
-            });*!/
-        } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-            /!*var returns;
-
-            this.each(function () {
-                var instance = $.data(this, 'plugin_' + pluginName);
-                if (typeof instance[options] === 'function') {
-                    returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
-                }
-                if (options === 'destroy') {
-                    $.data(this, 'plugin_' + pluginName, null);
-                }
-            });
-            return returns !== undefined ? returns : this;*!/
-        }
-    };*/
+    exports.SmartSelect = SmartSelect;
 }));
