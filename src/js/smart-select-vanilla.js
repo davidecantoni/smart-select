@@ -205,7 +205,7 @@
                 var div = this.button.querySelector('div');
 
                 // trigger only if specific dropdown is open and event target is not present in container
-                if (div.classList.contains('open') && e.target.parentNode != this.container) {
+                if (div.classList.contains('open') && !this.container.contains(e.target)) {
                     this._toggleList(false);
                 }
             });
