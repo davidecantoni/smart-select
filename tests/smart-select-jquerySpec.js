@@ -1,31 +1,18 @@
 describe("Smart select test suite", function() {
 
     beforeAll(function() {
-        //http://stackoverflow.com/questions/22026854/including-css-in-karma-tests-using-webstorm-debugger
         $('body').html(HTML5_SKELETON);
 
-        $('body').append('<link rel="stylesheet" href="node_modules/normalize.css/normalize.css" />')
-            .append('<link rel="stylesheet" href="helper/main.css" />')
-            .append('<link rel="stylesheet" href="dist/css/smart-select.css" />');
+        $('select').smartSelect(options);
 
         this.country = $('.country');
-        this.countrySelect = new SmartSelect('select.country', options);
-
-        this.food = $('.food');
-        this.foodSelect = new SmartSelect('select.food', options);
-
-        this.names = $('.names');
-        this.namesSelect = new SmartSelect('select.names', options);
-
-        this.cars = $('.cars');
-        this.carsSelect = new SmartSelect('select.cars', options);
+        this.food    = $('.food');
+        this.names   = $('.names');
+        this.cars    = $('.cars');
     });
 
     afterAll(function() {
-        //this.countrySelect.destroy();
-        //this.foodSelect.destroy();
-        //this.namesSelect.destroy();
-        //this.carsSelect.destroy();
+        //$('select').smartSelect('destroy');
     });
 
     describe("Country select with numbers as values", function() {
@@ -74,7 +61,6 @@ describe("Smart select test suite", function() {
 
             // click outside the scope
             $('body').get(0).dispatchEvent(event);
-            document.querySelector('body').dispatchEvent(event);
 
             // drop-down should be hidden
             //expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
@@ -158,14 +144,14 @@ describe("Smart select test suite", function() {
 
     describe("Public methods", function() {
         it("should refresh select", function() {
-            this.countrySelect.refresh();
+            this.country.smartSelect('refresh');
         });
 
         it("should destroy select", function() {
             expect(this.country.next('.ms-parent').length).toBe(1);
             expect(this.country.is(':visible')).toBe(false);
 
-            this.countrySelect.destroy();
+            this.country.smartSelect('destroy');
             expect(this.country.next().hasClass('.ms-parent')).toBe(false);
             expect(this.country.is(':visible')).toBe(true);
         });

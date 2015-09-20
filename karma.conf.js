@@ -15,11 +15,16 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      {pattern: 'node_modules/**/*.css', included: false},
+      {pattern: 'helper/*.css', included: false},
+      {pattern: 'dist/**/*.css', included: false},
       'node_modules/jquery/dist/jquery.js',
       'node_modules/normalize.css/normalize.css',
       'helper/main.css',
       'dist/css/smart-select.css',
       'src/js/smart-select-vanilla.js',
+      'tests/_helper.js',
+      'tests/smart-select-jquerySpec.js',
       'tests/smart-select-vanillaSpec.js'
     ],
 
@@ -33,7 +38,7 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'src/js/*.js': ['babel'],
-      'tests/*Spec.js': ['babel']
+      'tests/*.js': ['babel']
     },
 
 
