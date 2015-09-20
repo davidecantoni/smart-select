@@ -88,7 +88,6 @@
             this.dropdown = document.createElement('div');
             //this is needed because js let you only know inline defined css properties
             this.dropdown.style.display = 'none';
-            this.dropdown.id = 'test';
             this.dropdown.className = `ms-drop${this._defaults.multiple ? ' multiple' : ''}`;
 
             // append
@@ -203,9 +202,11 @@
             // close if clicked outside
             window.addEventListener('click', (e) => {
                 var div = this.button.querySelector('div');
-
                 // trigger only if specific dropdown is open and event target is not present in container
-                if (div.classList.contains('open') && !this.container.contains(e.target)) {
+                if (div.classList.contains('open') &&
+                    e.target.tagName != 'HTML' &&
+                    !this.container.contains(e.target)
+                ) {
                     this._toggleList(false);
                 }
             });

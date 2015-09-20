@@ -129,14 +129,10 @@ describe("Smart select test suite", function() {
             expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(true);
 
             // click outside the scope
-            $(window).get(0).dispatchEvent(this.event);
-            window.dispatchEvent(this.event);
+            $('body').get(0).dispatchEvent(this.event);
 
             // drop-down should be hidden
-            //console.log(this.country.next('.ms-parent').find('.ms-drop').get(0).style.display);
-            //expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
-
-            //this.country.next('.ms-parent').find('button').get(0).dispatchEvent(this.event);
+            expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
         });
     });
 
