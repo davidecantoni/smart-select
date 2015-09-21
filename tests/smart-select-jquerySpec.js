@@ -1,7 +1,7 @@
-describe("Smart select test suite", function() {
+describe("Smart select test suite for jQuery", function() {
 
     beforeAll(function() {
-        $('body').html(HTML5_SKELETON);
+        $('body').html(HTML5_SKELETON).append(style);
 
         $('select').smartSelect(options);
 
@@ -63,7 +63,7 @@ describe("Smart select test suite", function() {
             $('body').get(0).dispatchEvent(event);
 
             // drop-down should be hidden
-            //expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
+            expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
         });
     });
 

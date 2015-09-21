@@ -19,9 +19,6 @@ module.exports = function(config) {
       {pattern: 'helper/*.css', included: false},
       {pattern: 'dist/**/*.css', included: false},
       'node_modules/jquery/dist/jquery.js',
-      'node_modules/normalize.css/normalize.css',
-      'helper/main.css',
-      'dist/css/smart-select.css',
       'src/js/smart-select-vanilla.js',
       'tests/_helper.js',
       'tests/smart-select-jquerySpec.js',
@@ -37,7 +34,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'src/js/*.js': ['babel'],
+      'src/js/*.js': ['babel', 'coverage'],
       'tests/*.js': ['babel']
     },
 
@@ -45,7 +42,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
 
 
     // web server port

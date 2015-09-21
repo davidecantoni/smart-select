@@ -44,6 +44,11 @@ const HTML5_SKELETON = `
     </div>
 </div>`;
 
+const style = `
+<link rel="stylesheet" href="/base/node_modules/normalize.css/normalize.css" />
+<link rel="stylesheet" href="/base/helper/main.css" />
+<link rel="stylesheet" href="/base/dist/css/smart-select.css" />`;
+
 const options = {
     "label": {
         "standard"      : "Placeholder",

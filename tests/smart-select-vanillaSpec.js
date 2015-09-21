@@ -1,12 +1,7 @@
 describe("Smart select test suite", function() {
 
     beforeAll(function() {
-        //http://stackoverflow.com/questions/22026854/including-css-in-karma-tests-using-webstorm-debugger
-        $('body').html(HTML5_SKELETON);
-
-        $('body').append('<link rel="stylesheet" href="node_modules/normalize.css/normalize.css" />')
-            .append('<link rel="stylesheet" href="helper/main.css" />')
-            .append('<link rel="stylesheet" href="dist/css/smart-select.css" />');
+        $('body').html(HTML5_SKELETON).append(style);
 
         this.country = $('.country');
         this.countrySelect = new SmartSelect('select.country', options);
@@ -22,10 +17,10 @@ describe("Smart select test suite", function() {
     });
 
     afterAll(function() {
-        //this.countrySelect.destroy();
-        //this.foodSelect.destroy();
-        //this.namesSelect.destroy();
-        //this.carsSelect.destroy();
+        /*this.countrySelect.destroy();
+        this.foodSelect.destroy();
+        this.namesSelect.destroy();
+        this.carsSelect.destroy();*/
     });
 
     describe("Country select with numbers as values", function() {
@@ -74,10 +69,9 @@ describe("Smart select test suite", function() {
 
             // click outside the scope
             $('body').get(0).dispatchEvent(event);
-            document.querySelector('body').dispatchEvent(event);
 
             // drop-down should be hidden
-            //expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
+            expect(this.country.next('.ms-parent').find('.ms-drop').is(':visible')).toBe(false);
         });
     });
 
@@ -163,7 +157,8 @@ describe("Smart select test suite", function() {
 
         it("should destroy select", function() {
             expect(this.country.next('.ms-parent').length).toBe(1);
-            expect(this.country.is(':visible')).toBe(false);
+            //this wont work because we force the default element to be visible for demonstration
+            //expect(this.country.is(':visible')).toBe(false);
 
             this.countrySelect.destroy();
             expect(this.country.next().hasClass('.ms-parent')).toBe(false);
