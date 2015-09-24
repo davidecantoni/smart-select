@@ -19,10 +19,10 @@ module.exports = function(config) {
       {pattern: 'helper/*.css', included: false},
       {pattern: 'dist/**/*.css', included: false},
       'node_modules/jquery/dist/jquery.js',
-      'src/js/smart-select-vanilla.js',
+      'src/js/smart-select.js',
       'tests/_helper.js',
-      'tests/smart-select-jquerySpec.js',
-      'tests/smart-select-vanillaSpec.js'
+      'tests/jquery.smart-selectSpec.js',
+      'tests/smart-selectSpec.js'
     ],
 
 

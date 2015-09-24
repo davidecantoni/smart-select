@@ -5,7 +5,8 @@ var gulp    = require('gulp'),
     sass    = require('gulp-sass'),
     jshint  = require('gulp-jshint'),
     rename  = require('gulp-rename'),
-    minify  = require('gulp-minify-css');
+    minify  = require('gulp-minify-css'),
+    jeditor = require("gulp-json-editor");
 
 gulp.task('connect', function() {
     connect.server({
@@ -43,6 +44,34 @@ gulp.task('js', function () {
 gulp.task('html', function () {
     gulp.src('./helper/*.html')
         .pipe(connect.reload());
+});
+
+gulp.task('publish', function () {
+    var data = {
+        "name": "smart-select",
+        "version": "0.1.0",
+        "description": "Smart select is replacing and beautifying standard selects while keeping them async",
+        "keywords": [
+            "select",
+            "multi-select",
+            "standalone",
+            "jquery",
+            "library",
+            "micro",
+            "smart"
+        ]
+    };
+    gulp.src("./package.json")
+        .pipe(jeditor(data))
+        .pipe(gulp.dest("./"));
+
+    gulp.src("./bower.json")
+        .pipe(jeditor(data))
+        .pipe(gulp.dest("./"));
+
+    gulp.src("./smartSelect.jquery.json")
+        .pipe(jeditor(data))
+        .pipe(gulp.dest("./"));
 });
 
 gulp.task('watch', function () {
