@@ -155,6 +155,11 @@ $('select[multiple]').smartSelect('refresh');
 ```
 
 
+## Compatibility
+- IE10+
+- Firefox
+- Safari
+- Chrome
 
 
 ## Changelog
