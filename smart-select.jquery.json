@@ -14,11 +14,12 @@
     "bugs": "https://github.com/davidecantoni/smart-select/issues",
     "docs": "https://github.com/davidecantoni/smart-select#readme",
     "download": "https://github.com/davidecantoni/smart-select/archive/master.zip",
-    "dependencies": {},
+    "dependencies": {
+        "jquery": ">=1.4"
+    },
     "keywords": [
         "select",
         "multi-select",
-        "multi select",
         "standalone",
         "library",
         "micro",

@@ -65,7 +65,6 @@ gulp.task('publish', function () {
         "keywords": [
             "select",
             "multi-select",
-            "multi select",
             "standalone",
             "library",
             "micro",
