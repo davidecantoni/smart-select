@@ -84,7 +84,7 @@ $height: 35px;
       cursor: pointer;
 
       &.selected,
-      &:hover {
+      &.item:hover {
         background-color: #1080C0;
         color: #FFF;
       }

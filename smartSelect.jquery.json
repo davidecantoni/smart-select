@@ -11,21 +11,17 @@
         "micro",
         "smart"
     ],
-    "version": "0.1.0",
+    "version": "0.2.0",
     "author": {
         "name": "Davide Cantoni",
         "url": "https://github.com/davidecantoni"
     },
-    "licenses": [
-        {
-            "type": "MIT",
-            "url": "http://www.opensource.org/licenses/mit-license.php"
-        }
-    ],
+    "licenses": [{
+        "type": "MIT",
+        "url": "http://www.opensource.org/licenses/mit-license.php"
+    }],
     "bugs": "https://github.com/davidecantoni/smart-select/issues",
     "docs": "https://github.com/davidecantoni/smart-select#readme",
     "download": "https://github.com/davidecantoni/smart-select/archive/master.zip",
-    "dependencies": {
-        "jquery": ">=1.4"
-    }
+    "dependencies": {}
 }

@@ -30,14 +30,13 @@
         "micro",
         "smart"
     ],
-    "authors": [
-        { "name": "Davide Cantoni", "email": "dev@davidecantoni.ch" }
-    ],
+    "authors": [{
+        "name": "Davide Cantoni",
+        "email": "dev@davidecantoni.ch"
+    }],
     "repository": {
         "type": "git",
         "url": "git://github.com/davidecantoni/smart-select.git"
     },
-    "dependencies": {
-        "jquery": ">=1.9"
-    }
+    "dependencies": {}
 }

@@ -5,21 +5,22 @@
  *
  */
 
-;(function (factory) {
+;(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
-        define(['jquery'], factory);
+        define(['exports'], factory);
     } else if (typeof exports === 'object') {
         // Node/CommonJS
-        factory(require('jquery'));
+        factory(exports);
     } else {
         // Browser globals
-        factory(window.jQuery || window.Zepto);
+        factory(root);
     }
-}(function($) {
+}(window, function(exports) {
 
     // Create the defaults once
     const pluginName = 'smartSelect';
+
     let defaults = {
         toggleButton: false,
         wrapperClass: 'ms-parent',
@@ -30,29 +31,28 @@
         textUnselectAll  : 'Unselect all'
     };
 
-
     // The actual plugin constructor
-    class Plugin {
+    class SmartSelect {
         constructor(element, new_options) {
 
-            //this.el  = element;
-            this.$el = this.$el = $(element);
+            // querySelector if string
+            this.el = typeof element == 'string' ?
+                document.querySelector( element ) : element;
 
-            this.$container = '';
-            this.$button = '';
-            this.$dropdown = '';
+            this.container = '';
+            this.button = '';
+            this.dropdown = '';
 
             this.changeListener = true;
-            this.selectedValue = '';
+            this.selectedValue = [];
 
-            this.options = $.extend(true, {}, defaults, new_options);
+            this.options = this._helperExtend(defaults, new_options);
             this._defaults = {
                 multiple: false
             };
-            //this._name = pluginName;
 
             // check if multiple or not
-            this._defaults.multiple = !!this.$el.attr('multiple');
+            this._defaults.multiple = !!this.el.hasAttribute('multiple');
 
             // convert selected values as array
             this._resetSelectedValue();
@@ -60,11 +60,14 @@
             // build button and element
             this._buildElement();
 
-            // load select
-            this._syncOption();
+            // define change events
+            this._defineEvents();
 
             // listen on origin change and rebuild element
-            this._bindListener();
+            this._listener('bind');
+
+            // load select
+            this._syncOption();
         }
 
         /**
@@ -72,16 +75,80 @@
          *
          **/
         _buildElement() {
-            this.$container = $(`<div class="${this.options.wrapperClass}"></div>`);
-            this.$button    = $(`<button type="button" class="ms-choice"><span></span><div></div></button>`);
-            this.$dropdown  = $(`<div class="ms-drop ${this._defaults.multiple ? 'multiple' : ''}"></div>`);
+
+            this.container = document.createElement('div');
+            this.container.className = this.options.wrapperClass;
+
+            this.button = document.createElement('button');
+            this.button.className = 'ms-choice';
+
+            this.button.appendChild(document.createElement('span'));
+            this.button.appendChild(document.createElement('div'));
+
+            this.dropdown = document.createElement('div');
+            //this is needed because js let you only know inline defined css properties
+            this.dropdown.style.display = 'none';
+            this.dropdown.className = `ms-drop${this._defaults.multiple ? ' multiple' : ''}`;
 
             // append
-            this.$container.append(this.$button).append(this.$dropdown);
-            this.$el.after(this.$container);
+            this.container.appendChild(this.button);
+            this.container.appendChild(this.dropdown);
+            this.el.parentNode.insertBefore(this.container, this.el.nextSibling);
+            //this.el.insertAdjacentElement('afterend', this.container); doesn't work on FF
 
             // hide element
-            this.$el.hide();
+            this.el.style.display = 'none';
+        }
+
+        /**
+         * _defineEvents() define all events
+         *
+         **/
+        _defineEvents() {
+            // listen on origin change and rebuild element
+            this.selectChange = () => {
+                if (this.changeListener) {
+                    this._syncOption();
+                }
+            };
+
+            // button
+            this.buttonClick = () => {
+                this._toggleList();
+            };
+
+            // close if clicked outside
+            this.windowClose = (e) => {
+                var div = this.button.querySelector('div');
+                // trigger only if specific dropdown is open and event target is not present in container
+                if (div.classList.contains('open') &&
+                    e.target.tagName != 'HTML' &&
+                    !this.container.contains(e.target)
+                ) {
+                    this._toggleList(false);
+                }
+            };
+
+            this.dropdownClick = (e) => {
+                // If it was a list item and not select toggler
+                if(e.target &&
+                    e.target.nodeName == "LI" &&
+                    !e.target.classList.contains("select-toggle")
+                ) {
+                    // single / multiple select
+                    this._updateSelected(e.target.getAttribute("data-value"));
+                }
+
+                // if single close drowdown
+                if (!this._defaults.multiple) {
+                    this._toggleList(false);
+                }
+            };
+
+            this.togglerClick = () => {
+                // select or unselect all items
+                this._toggleAll();
+            };
         }
 
         /**
@@ -92,13 +159,13 @@
         _setSelectedValue(val) {
             if (this._defaults.multiple) {
                 var position = this.selectedValue.indexOf(val);
-                if (position >= 0) {
+                if (position != -1) {
                     this.selectedValue.splice(position, 1);
                 } else {
                     this.selectedValue.push(val);
                 }
             } else {
-                this.selectedValue = val;
+                this.selectedValue[0] = val;
             }
         }
 
@@ -108,10 +175,21 @@
          *
          **/
         _resetSelectedValue() {
-            if (this._defaults.multiple) {
-                this.selectedValue = [];
-            } else {
-                this.selectedValue = '';
+            this.selectedValue = [];
+        }
+
+        /**
+         * _updateNativeSelect() sync native select
+         *
+         **/
+        _updateNativeSelect() {
+            var options = this.el.querySelectorAll('option');
+            for (var i = 0; i < options.length; i++) {
+                if (this.selectedValue.indexOf(options[i].value) != -1) {
+                    options[i].selected = true;
+                } else {
+                    options[i].selected = false;
+                }
             }
         }
 
@@ -123,93 +201,77 @@
             let html = '<ul>';
             if (this._defaults.multiple && this.options.toggler) {
                 html += `
-                <li class="select-toggle" data-value="" data-translate-toggle="${this.options.textUnselectAll}">
+                <li class="select-toggle" data-translate-toggle="${this.options.textUnselectAll}">
                     ${this.options.textSelectAll}
                 </li>`;
             }
             this._resetSelectedValue();
 
-            this.$el.find('option').each((i, elm) => {
+            var options = this.el.querySelectorAll('option');
+            for (var i = 0; i < options.length; i++) {
                 var selected = '';
-                var $option = $(elm);
-                if ($option.is(':selected')) {
-                    this._setSelectedValue($option.val());
+                var option = options[i];
+                if (option.selected) {
+                    this._setSelectedValue(option.value);
                     selected = 'selected';
                 }
                 html += `
-                <li class="${selected}" data-value="${$option.val()}">
-                    ${$option.text()}
+                <li class="${selected} item" data-value="${option.value}">
+                    ${option.text}
                 </li>`;
-            });
+            }
             html += '</ul>';
 
             // reset all select items
-            this.$el.find('option:selected').attr('selected', null);
-            this.$el.val(this.selectedValue);
+            for (i = 0; i < this.el.options.length; i++) {
+                this.el.options[i].selected = false;
+            }
+
+            this._updateNativeSelect();
 
             // insert into dropdown
-            this.$dropdown.html(html);
+            this.dropdown.innerHTML = html;
 
             if (this._defaults.multiple && this.options.toggler) {
-                this.$toggler = this.$dropdown.find('li.select-toggle');
+                this.toggler = this.dropdown.querySelector('li.select-toggle');
             }
 
             // set label
             this._setLabel();
 
             // bind event
-            this._bindEvent();
+            this._event('unbind');
+            this._event('bind');
         }
 
         /**
          * _bindListener() on changes to the original select sync the custom one
          *
          **/
-        _bindListener() {
-
-            // listen on origin change and rebuild element
-            this.$el.on('change', () => {
-                if (this.changeListener) {
-                    this._syncOption();
-                }
-            });
-
-            // button
-            this.$button.on('click', () => {
-                this._toggleList();
-            });
-
-            // close if clicked outside
-            $(window).click((e) => {
-                if (this.$button.find('>div').hasClass('open')) {
-                    if ($(e.target)[0] === this.$button[0] ||
-                        $(e.target).parents('.ms-choice')[0] === this.$button[0]) {
-                    } else if ($(e.target)[0] === this.$dropdown[0] ||
-                        $(e.target).parents('.ms-drop')[0] === this.$dropdown[0]) {
-                    } else {
-                        this._toggleList(false);
-                    }
-                }
-            });
+        _listener(type='bind') {
+            this._helperAddEvent(type, 'change', this.el, this.selectChange);
+            this._helperAddEvent(type, 'click', this.button, this.buttonClick);
+            this._helperAddEvent(type, 'click', window, this.windowClose);
         }
 
         _setLabel() {
             // first item
-            var label = this.$el.find('option:first').text();
+            var label = this.el.options[0].text;
 
             // check if there is an empty value item and use it as default
-            var $emptyValueItem = this.$el.find('option[value=""]');
-            if ($emptyValueItem.length) {
-                label = $emptyValueItem.text();
+            for (var i = 0; i < this.el.options.length; i++) {
+                if (this.el.options[i].value === "") {
+                    label = this.el.options[i].text;
+                }
             }
 
             if (this._defaults.multiple) {
                 // on init set item
                 label = this.options.textStandard;
 
-                var items = this.$dropdown.find('li:not(.select-toggle)');
+                var items = this.dropdown.querySelectorAll('li:not(.select-toggle)');
                 if (this.options.toggler) {
-                    this._setToggleLabel(false);
+                    this._setToggleLabel('off');
                 }
 
                 if (this.selectedValue.length >= 2 && this.selectedValue.length < items.length) {
@@ -218,95 +280,104 @@
                     label = this.options.textAllSelected;
                     // toggle label
                     if (this.options.toggler) {
-                        this._setToggleLabel(true);
+                        this._setToggleLabel('on');
                     }
                 } else if (this.selectedValue.length === 1) {
-                    label = this.$el.find('option[value="' + this.selectedValue[0] + '"]').text();
+                    label = this.el.querySelector('option[value="' + this.selectedValue[0] + '"]').text;
                 }
             } else {
-                if (this.selectedValue) {
-                    label = this.$el.find('option[value="' + this.selectedValue + '"]').text();
-                } else if (this.selectedValue === 0) {
-                    label = this.$el.find('option[value="0"]').text();
+                if (this.selectedValue.length === 1) {
+                    for (i = 0; i < this.el.options.length; i++) {
+                        if (this.el.options[i].value === this.selectedValue[0]) {
+                            label = this.el.options[i].text;
+                        }
+                    }
+                } else if (this.selectedValue[0] === 0) {
+                    for (i = 0; i < this.el.options.length; i++) {
+                        if (this.el.options[i].value === "0") {
+                            label = this.el.options[i].text;
+                        }
+                    }
                 }
             }
 
-            this.$button.find('span').text(label);
+            this.button.querySelector('span').innerHTML = label;
         }
 
-        _setToggleLabel(status) {
-            if (status) {
-                if (this.$toggler.hasClass('selected')) {
+        _setToggleLabel(action='on') {
+            if (action === 'on') {
+                if (this.toggler.classList.contains('all')) {
                     return;
                 }
             } else {
-                if (!this.$toggler.hasClass('selected')) {
+                if (!this.toggler.classList.contains('all')) {
                     return;
                 }
             }
 
             // toggle class
-            this.$toggler.toggleClass('selected', status);
-            var text = this.$toggler.text();
-            this.$toggler.text(this.$toggler.data('translate-toggle'));
-            this.$toggler.data('translate-toggle', text);
+            this.toggler.classList.toggle('all', action === 'on');
+            var text = this.toggler.textContent;
+            this.toggler.textContent = this.toggler.getAttribute('data-translate-toggle');
+            this.toggler.setAttribute('data-translate-toggle', text);
         }
 
-        _bindEvent() {
-            var self = this;
+        _event(action='bind') {
+            if (action === 'unbind') {
+                // items
+                this._helperAddEvent('unbind', 'click', this.dropdown, this.dropdownClick);
 
-            // items
-            // TODO: convert to arrow funtions
-            this.$dropdown.find('li:not(.select-toggle)').off('click').on('click', function() {
-                // single / multiple select
-                self._updateSelected($(this).data('value'));
-
-                // if single close drowdown
-                if (!self._defaults.multiple) {
-                    self._toggleList(false);
+                // items toggler
+                if (this._defaults.multiple && this.options.toggler) {
+                    this._helperAddEvent('unbind', 'click', this.toggler, this.togglerClick);
                 }
-            });
+            } else {
+                // items
+                this._helperAddEvent('bind', 'click', this.dropdown, this.dropdownClick);
 
-            // items toggler
-            if (this._defaults.multiple && this.options.toggler) {
-                this.$toggler.off('click').on('click', () => {
-                    // select or unselect all items
-                    this._toggleAll();
-                });
+                // items toggler
+                if (this._defaults.multiple && this.options.toggler) {
+                    this._helperAddEvent('bind', 'click', this.toggler, this.togglerClick);
+                }
             }
         }
 
         _toggleAll() {
-            if (this.$toggler.hasClass('selected')) {
+            if (this.toggler.classList.contains('all')) {
                 // empty array
                 this._resetSelectedValue();
 
                 // set value to original select
-                this.$el.val([]);
+                this._updateNativeSelect();
 
                 // unselect all list items
-                this.$dropdown.find('li:not(.select-toggle)').removeClass('selected');
+                var items = this.dropdown.querySelectorAll('li:not(.select-toggle)');
+                for (var i = 0; i < items.length; i++) {
+                    items[i].classList.remove('selected');
+                }
 
                 // toggle label
-                this._setToggleLabel(false);
+                this._setToggleLabel('off');
             } else {
                 var collection = [];
                 // select all option
-                // TODO arrow function
-                this.$el.find('option').each(function () {
-                    collection.push($(this).val());
-                });
-
+                var options = this.el.querySelectorAll('option');
+                for (var i = 0; i < this.el.options.length; i++) {
+                    collection.push(options[i].value);
+                }
                 this.selectedValue = collection;
 
                 // set value to original select
-                this.$el.val(this.selectedValue);
+                this._updateNativeSelect();
 
                 // select all list items
-                this.$dropdown.find('li:not(.select-toggle)').addClass('selected');
+                var items = this.dropdown.querySelectorAll('li:not(.select-toggle)');
+                for (var i = 0; i < items.length; i++) {
+                    items[i].classList.add('selected');
+                }
 
                 // toggle label
-                this._setToggleLabel(true);
+                this._setToggleLabel('on');
             }
 
             // change button label
@@ -316,24 +387,43 @@
             this.changeListener = false;
 
             // trigger change
-            this.$el.change();
+            var event = document.createEvent('HTMLEvents');
+            event.initEvent('change', true, true);
+            this.el.dispatchEvent(event);
 
             // end avoid infinitive loop
             this.changeListener = true;
         }
 
         _toggleList(state) {
-            // close all choice button class exept this one
-            $(document).find('.ms-choice > div').not(this.$button.find('> div')).toggleClass('open', false);
+            // close all choice button class except this one
+            var buttons = document.querySelectorAll('button.ms-choice');
+            for (var i = 0; i < buttons.length; i++) {
+                if (this.button != buttons[i]) {
+                    buttons[i].classList.remove('open');
+                }
+            }
 
-            // close all dropdown exept current one
-            $(document).find('.ms-drop').not(this.$dropdown).toggle(false);
+            // close all drop downs except current one
+            var dropdowns = document.querySelectorAll('.ms-drop');
+            for (i = 0; i < dropdowns.length; i++) {
+                if (this.dropdown != dropdowns[i]) {
+                    dropdowns[i].style.display = "none";
+                }
+            }
 
-            // toggle choice button class
-            this.$button.find('>div').toggleClass('open', state);
+            // if nothing defined, toggle choice button class and dropdown display status
+            if (typeof state === 'undefined') {
+                // toggle choice button class
+                this.button.querySelector('div').classList.toggle('open');
+                this.dropdown.style.display = (this.dropdown.style.display != 'none' ? 'none' : 'block' );
+            } else {
+                // set choice button class depending on the status
+                this.button.querySelector('div').classList.toggle('open', state);
 
-            // toggle dropdown
-            this.$dropdown.toggle(state);
+                // change display status of dropdown depending on the status
+                this.dropdown.style.display = (state ? 'block' : 'none' );
+            }
         }
 
         _updateSelected(value) {
@@ -341,30 +431,59 @@
             this._setSelectedValue(value);
 
             // set value to original select
-            this.$el.val(this.selectedValue);
+            this._updateNativeSelect();
 
             // change button label
             this._setLabel();
 
             if (this._defaults.multiple) {
                 // toggle specific one
-                this.$dropdown.find(`li[data-value="${value}"]`).toggleClass('selected');
+                this.dropdown.querySelector(`li[data-value="${value}"]`).classList.toggle('selected');
             } else {
                 // remove specific one
-                this.$dropdown.find('li.selected').removeClass('selected');
+                this.dropdown.querySelector('li.selected').classList.remove('selected');
 
                 // select specific one
-                this.$dropdown.find(`li[data-value="${value}"]`).addClass('selected');
+                this.dropdown.querySelector(`li[data-value="${value}"]`).classList.add('selected');
             }
 
             // avoid infinitive loop
             this.changeListener = false;
 
             // trigger change
-            this.$el.change();
+            var e = document.createEvent('HTMLEvents');
+            e.initEvent('change', true, true);
+            this.el.dispatchEvent(e);
 
             // end avoid infinitive loop
             this.changeListener = true;
+        }
+
+        _helperExtend(origin, obj) {
+            for (var i in obj) {
+                if (obj.hasOwnProperty(i)) {
+                    origin[i] = obj[i];
+                }
+            }
+            return origin;
+        }
+
+        _helperAddEvent(type, evnt, elem, func) {
+            if (elem.addEventListener) { // W3C DOM
+                if (type === 'bind') {
+                    elem.addEventListener(evnt, func);
+                } else {
+                    elem.removeEventListener(evnt,func);
+                }
+            } else if (elem.attachEvent) { // IE DOM
+                if (type === 'bind') {
+                    elem.attachEvent("on"+evnt, func);
+                } else {
+                    elem.detachEvent("on"+evnt, func);
+                }
+            } else { // No much to do
+                elem[evnt] = func;
+            }
         }
 
         refresh() {
@@ -372,34 +491,40 @@
         }
 
         destroy() {
-            this.$container.remove();
-            this.$el.show();
+            this._listener('unbind');
+            this.container.outerHTML = '';
+            delete this.container;
+            this.el.style.display = 'block';
         }
     }
 
     // convert to a jquery plugin
-    $.fn[pluginName] = function (options) {
-        var args = arguments;
+    /*if (window.jQuery) {
+        $.fn[pluginName] = function (options) {
+            var args = arguments;
 
-        if (options === undefined || typeof options === 'object') {
-            return this.each(function () {
-                if (!$.data(this, 'plugin_' + pluginName)) {
-                    $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
-                }
-            });
-        } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-            var returns;
+            if (options === undefined || typeof options === 'object') {
+                return this.each(function () {
+                    if (!$.data(this, 'plugin_' + pluginName)) {
+                        $.data(this, 'plugin_' + pluginName, new SmartSelect(this, options));
+                    }
+                });
+            } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+                var returns;
 
-            this.each(function () {
-                var instance = $.data(this, 'plugin_' + pluginName);
-                if (typeof instance[options] === 'function') {
-                    returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
-                }
-                if (options === 'destroy') {
-                    $.data(this, 'plugin_' + pluginName, null);
-                }
-            });
-            return returns !== undefined ? returns : this;
-        }
-    };
+                this.each(function () {
+                    var instance = $.data(this, 'plugin_' + pluginName);
+                    if (typeof instance[options] === 'function') {
+                        returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+                    }
+                    if (options === 'destroy') {
+                        $.data(this, 'plugin_' + pluginName, null);
+                    }
+                });
+                return returns !== undefined ? returns : this;
+            }
+        };
+    }*/
+
+    exports.SmartSelect = SmartSelect;
 }));

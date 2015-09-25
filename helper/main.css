@@ -44,6 +44,9 @@ select {
     border-radius: 4px;
     margin-bottom: 5px;
 }
+
+
+
 /*for demonstration purpose only*/
 select {
     display: block !important;

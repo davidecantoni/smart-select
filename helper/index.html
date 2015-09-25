@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Smart select - demo</title>
+    <title>Smart select native - demo</title>
     <link rel="stylesheet" href="/normalize.css/normalize.css">
     <link rel="stylesheet" href="/main.css">
     <link rel="stylesheet" href="/css/smart-select.css">
@@ -10,7 +10,7 @@
 <body>
 
 <div class="content">
-    <h1>Smart select - demo</h1>
+    <h1>Smart select native - demo</h1>
 
     <div class="select-block">
         <span class="info">Country select with numbers as values</span>
@@ -58,7 +58,6 @@
     </div>
 </div>
 
-    <script src="/jquery/dist/jquery.js"></script>
     <script src="/js/smart-select.js"></script>
     <script>
         this.options = {
@@ -72,14 +71,33 @@
             toggler: true
         };
 
-        $('select').smartSelect(this.options);
-        $('select').on('change', function() {
-            var value = $(this).val();
-            if ($.isArray(value)) {
-                value = value.join();
-            }
-            $(this).parent().find('.val small').html(value);
-        });
+        new SmartSelect('select.country', this.options);
+        new SmartSelect('select.food', this.options);
+        new SmartSelect('select.names', this.options);
+        new SmartSelect('select.cars', this.options);
+
+        var selects = document.querySelectorAll('select');
+        for (var i=0;selects.length>i;i++) {
+            selects[i].addEventListener('change', function() {
+                var value = this.value;
+
+                if (this.hasAttribute('multiple')) {
+                    var result = [];
+                    var options = this && this.options;
+                    var opt;
+
+                    for (var i=0, iLen=options.length; i<iLen; i++) {
+                        opt = options[i];
+
+                        if (opt.selected) {
+                            result.push(opt.value || opt.text);
+                        }
+                    }
+                    value = result.join();
+                }
+                this.parentNode.getElementsByTagName("small")[0].innerHTML= value;
+            });
+        }
     </script>
 </body>
 </html>

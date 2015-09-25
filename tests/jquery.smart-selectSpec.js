@@ -152,7 +152,7 @@ describe("Smart select test suite for jQuery", function() {
             expect(this.country.is(':visible')).toBe(false);
 
             this.country.smartSelect('destroy');
-            expect(this.country.next().hasClass('.ms-parent')).toBe(false);
+            expect(this.country.next('.ms-parent').length).toBe(0);
             expect(this.country.is(':visible')).toBe(true);
         });
     });

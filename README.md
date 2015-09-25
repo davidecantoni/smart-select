@@ -12,7 +12,7 @@ The plugin acts on top of native selects and keeps them async.
 
 You can attach events on the native select, smart select will take over and trigger them as if the user interact with them directly.
 It makes sense to use the plugin in connection with RWD where you wanna switch between native selects for mobile 
-and smart select for desktop users without having device specific logic in the javscript code.
+and smart select for desktop users without having device specific logic in the javascript code.
 
 The plugin is written in ES6 and transpiled to the current version of javascript (es5) that will run all browsers.
 The module types supported are global, AMD and CommonJS and ES6 if you use the src file.
@@ -47,6 +47,36 @@ Your selects will look the same everywhere.
 
 
 ## How to use
+
+#### native javascript
+
+Insert javascript in your page:
+
+```html
+<!-- smart select -->
+<script src="dist/js/smart-select.min.js"></script> 
+
+<select class="cars" multiple>
+    <option value="porsche" selected>Porsche</option>
+    <option value="ferrari">Ferrari</option>
+    <option value="lamborghini">Lamborghini</option>
+    <option value="audi">Audi</option>
+</select>
+```
+
+Initialize the plugin
+
+```js
+<script type="text/javascript">
+    // make sure dom is ready
+    window.addEventListener("load", function() {
+        // initialize all select elements
+        var carInstance = SmartSelect('select.cars', this.options);
+    });
+</script> 
+```
+
+#### with jquery
 
 Insert javascript in your page:
 
@@ -94,6 +124,12 @@ Smart select comes with a few options you can change to suit your needs.
 Example usage:
 
 ```javascript
+SmartSelect('select.cars', {
+   toggleButton: true,
+   textSelectAll: "- ALL -"
+});
+
+// or with jQuery 
 $('select[multiple]').smartSelect({
     toggleButton: true,
     textSelectAll: "- ALL -"
@@ -112,6 +148,9 @@ Smart select plugin has two public methods:
 Once you have initialised smart select on a select element you can access the above mentioned methods like this: 
 
 ```javascript
+carInstance.refresh();
+
+// or with jQuery 
 $('select[multiple]').smartSelect('refresh');
 ```
 
@@ -119,6 +158,9 @@ $('select[multiple]').smartSelect('refresh');
 
 
 ## Changelog
+
+#### v0.2.0 2015-09-25
+Drop jQuery dependency
 
 #### v0.1.0 2015-09-11
 Initial release

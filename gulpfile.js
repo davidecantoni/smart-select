@@ -49,7 +49,7 @@ gulp.task('html', function () {
 gulp.task('publish', function () {
     var data = {
         "name": "smart-select",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "description": "Smart select is replacing and beautifying standard selects while keeping them async",
         "keywords": [
             "select",
@@ -66,7 +66,12 @@ gulp.task('publish', function () {
         .pipe(gulp.dest("./"));
 
     gulp.src("./bower.json")
-        .pipe(jeditor(data))
+        .pipe(jeditor(function(json) {
+            json.name = data.name;
+            json.description = data.description;
+            json.keywords = data.keywords;
+            return json;
+        }))
         .pipe(gulp.dest("./"));
 
     gulp.src("./smartSelect.jquery.json")

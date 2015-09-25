@@ -6,6 +6,8 @@
         "require": false,
         "window": false,
         "document": false,
-        "define": false
+        "define": false,
+        "$": false,
+        "exports": false
     }
 }
