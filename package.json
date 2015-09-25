@@ -46,7 +46,8 @@
     "jquery",
     "library",
     "micro",
-    "smart"
+    "smart",
+    "multi select"
   ],
   "author": "Davide Cantoni <dev@davidecantoni.ch>",
   "license": "MIT",
