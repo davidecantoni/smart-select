@@ -1,4 +1,4 @@
-# Smart select plugin
+# Smart select plugin (2.32KB gzipped)
 
 ![Demo](http://i.imgur.com/8E6m5NQ.gif)
 
