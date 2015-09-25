@@ -1,10 +1,9 @@
-/*
- *  Smart select plugin - v0.1.1 - 2015-09-11
- *  https://github.com/davidecantoni/smart-select
- *  Copyright (c) 2015 Davide Cantoni
- *
+/**
+ * smart-select - Smart select is replacing and beautifying standard selects while keeping them async
+ * @version v0.2.0
+ * @link https://github.com/davidecantoni/smart-select#readme
+ * @license MIT
  */
-
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -78,30 +77,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
 
         // convert to a jquery plugin
-        /*if (window.jQuery) {
-            $.fn[pluginName] = function (options) {
-                var args = arguments;
-                 if (options === undefined || typeof options === 'object') {
-                    return this.each(function () {
-                        if (!$.data(this, 'plugin_' + pluginName)) {
-                            $.data(this, 'plugin_' + pluginName, new SmartSelect(this, options));
-                        }
-                    });
-                } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-                    var returns;
-                     this.each(function () {
-                        var instance = $.data(this, 'plugin_' + pluginName);
-                        if (typeof instance[options] === 'function') {
-                            returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
-                        }
-                        if (options === 'destroy') {
-                            $.data(this, 'plugin_' + pluginName, null);
-                        }
-                    });
-                    return returns !== undefined ? returns : this;
-                }
-            };
-        }*/
 
         /**
          * _buildElement() construct the basic markup for the custom select
@@ -557,6 +532,33 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
         return SmartSelect;
     })();
+
+    if (window.jQuery) {
+        $.fn[pluginName] = function (options) {
+            var args = arguments;
+
+            if (options === undefined || typeof options === 'object') {
+                return this.each(function () {
+                    if (!$.data(this, 'plugin_' + pluginName)) {
+                        $.data(this, 'plugin_' + pluginName, new SmartSelect(this, options));
+                    }
+                });
+            } else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+                var returns;
+
+                this.each(function () {
+                    var instance = $.data(this, 'plugin_' + pluginName);
+                    if (typeof instance[options] === 'function') {
+                        returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+                    }
+                    if (options === 'destroy') {
+                        $.data(this, 'plugin_' + pluginName, null);
+                    }
+                });
+                return returns !== undefined ? returns : this;
+            }
+        };
+    }
 
     exports.SmartSelect = SmartSelect;
 });

@@ -6,7 +6,9 @@ var gulp    = require('gulp'),
     jshint  = require('gulp-jshint'),
     rename  = require('gulp-rename'),
     minify  = require('gulp-minify-css'),
-    jeditor = require("gulp-json-editor");
+    jeditor = require("gulp-json-editor"),
+    header  = require('gulp-header'),
+    pkg     = require('./package.json');
 
 gulp.task('connect', function() {
     connect.server({
@@ -28,6 +30,14 @@ gulp.task('sass', function () {
         .pipe(gulp.dest('dist/css'));
 });
 
+
+var banner = ['/**',
+    ' * <%= pkg.name %> - <%= pkg.description %>',
+    ' * @version v<%= pkg.version %>',
+    ' * @link <%= pkg.homepage %>',
+    ' * @license <%= pkg.license %>',
+    ' */',
+    ''].join('\n');
 gulp.task('js', function () {
     return gulp.src('./src/js/*.js')
         .pipe(jshint())
@@ -35,6 +45,7 @@ gulp.task('js', function () {
             verbose: true
         }))
         .pipe(babel())
+        .pipe(header(banner, { pkg : pkg } ))
         .pipe(gulp.dest('dist/js'))
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
@@ -85,4 +96,4 @@ gulp.task('watch', function () {
     gulp.watch(['./src/js/*.js'], ['js']);
 });
 
-gulp.task('default', ['sass', 'js', 'connect', 'watch']);
+gulp.task('default', ['publish', 'sass', 'js', 'connect', 'watch']);

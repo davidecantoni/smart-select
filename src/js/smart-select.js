@@ -1,10 +1,3 @@
-/*
- *  Smart select plugin - v0.1.1 - 2015-09-11
- *  https://github.com/davidecantoni/smart-select
- *  Copyright (c) 2015 Davide Cantoni
- *
- */
-
 ;(function (root, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
@@ -499,7 +492,7 @@
     }
 
     // convert to a jquery plugin
-    /*if (window.jQuery) {
+    if (window.jQuery) {
         $.fn[pluginName] = function (options) {
             var args = arguments;
 
@@ -524,7 +517,7 @@
                 return returns !== undefined ? returns : this;
             }
         };
-    }*/
+    }
 
     exports.SmartSelect = SmartSelect;
 }));
