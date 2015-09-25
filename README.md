@@ -156,7 +156,9 @@ $('select[multiple]').smartSelect('refresh');
 
 
 ## Compatibility
-- IE10+
+- IE9+ 
+> if you have to support IE9, add the following Cross-browser element.classList shim:
+> https://github.com/eligrey/classList.js
 - Firefox
 - Safari
 - Chrome
