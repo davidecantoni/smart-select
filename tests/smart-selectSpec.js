@@ -14,6 +14,9 @@ describe("Smart select test suite", function() {
 
         this.cars = $('.cars');
         this.carsSelect = new SmartSelect('select.cars', options);
+
+        this.numbers = $('.numbers');
+        this.numbersSelect = new SmartSelect('select.numbers', options);
     });
 
     afterAll(function() {
@@ -151,6 +154,22 @@ describe("Smart select test suite", function() {
 
             // 2 items should be selected now
             expect(this.cars.next('.ms-parent').find('button').text()).toBe('2 Selected');
+        });
+    });
+
+    describe("Numbers multi-select with string as values", function() {
+        it('should change multiple values', function () {
+            // 2 items should be selected now
+            expect(this.numbers.next('.ms-parent').find('button').text()).toBe('2 Selected');
+
+            // display the drop-down
+            this.numbers.next('.ms-parent').find('button').get(0).dispatchEvent(event);
+
+            // // select multiple items
+            this.numbers.next('.ms-parent').find('.ms-drop li[data-value="1"]').get(0).dispatchEvent(event);
+
+            // // 2 items should be selected now
+            expect(this.numbers.next('.ms-parent').find('button').text()).toBe('Two');
         });
     });
 

@@ -42,6 +42,16 @@ const HTML5_SKELETON = `
             <option value="">Audi</option>
         </select>
     </div>
+
+    <div class="select-block">
+        <span class="info">Multi-select with integer as values</span>
+        <select class="numbers" multiple>
+            <option value="1" selected>One</option>
+            <option value="2" selected>Two</option>
+            <option value="3">Three</option>
+            <option value="4">Four</option>
+        </select>
+    </div>
 </div>`;
 
 const style = `

@@ -56,6 +56,16 @@
         </select>
         <div class="val">Selected value: <small></small></div>
     </div>
+
+    <div class="select-block">
+        <span class="info">Multi-select with integer as values</span>
+        <select class="numbers" multiple>
+            <option value="one" selected>One</option>
+            <option value="two" selected>Two</option>
+            <option value="three">Three</option>
+            <option value="four">Four</option>
+        </select>
+    </div>
 </div>
 
     <!--only needed for IE9 support-->
@@ -79,6 +89,7 @@
         new SmartSelect('select.food', this.options);
         new SmartSelect('select.names', this.options);
         new SmartSelect('select.cars', this.options);
+        new SmartSelect('select.numbers', this.options);
 
         var selects = document.querySelectorAll('select');
         for (var i=0;selects.length>i;i++) {
