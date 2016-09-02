@@ -1,3 +1,4 @@
 node_modules
 Wallaby.js
 coverage
+npm-debug.log

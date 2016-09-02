@@ -68,7 +68,6 @@
       padding-left: 8px;
       padding-right: 8px;
       cursor: pointer; }
-      .ms-drop ul > li.selected,
-      .ms-drop ul > li.item:hover {
+      .ms-drop ul > li.selected, .ms-drop ul > li.item:hover {
         background-color: #1080C0;
         color: #FFF; }

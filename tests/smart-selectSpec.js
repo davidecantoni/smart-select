@@ -167,9 +167,11 @@ describe("Smart select test suite", function() {
 
             // // select multiple items
             this.numbers.next('.ms-parent').find('.ms-drop li[data-value="1"]').get(0).dispatchEvent(event);
+            // // select multiple items
+            this.numbers.next('.ms-parent').find('.ms-drop li[data-value="4"]').get(0).dispatchEvent(event);
 
             // // 2 items should be selected now
-            expect(this.numbers.next('.ms-parent').find('button').text()).toBe('Two');
+            expect(this.numbers.next('.ms-parent').find('button').text()).toBe('2 Selected');
         });
     });
 
