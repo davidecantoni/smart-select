@@ -223,13 +223,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
                 var options = this.el.querySelectorAll('option');
                 for (var i = 0; i < options.length; i++) {
-                    var selected = '';
                     var option = options[i];
+                    var classes = ['item'];
+                    classes.push(option.classList);
                     if (option.selected) {
-                        this._setSelectedValue(option.value);
-                        selected = 'selected';
+                        this._setSelectedValue(option.value.toString());
+                        classes.push('selected');
                     }
-                    html += '\n                <li class="' + selected + ' item" data-value="' + option.value + '">\n                    ' + option.text + '\n                </li>';
+
+                    html += '\n                <li class="' + classes.join(' ') + '" data-value="' + option.value + '">\n                    ' + option.text + '\n                </li>';
                 }
                 html += '</ul>';
 

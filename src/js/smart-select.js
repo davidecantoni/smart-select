@@ -202,14 +202,16 @@
 
             var options = this.el.querySelectorAll('option');
             for (var i = 0; i < options.length; i++) {
-                var selected = '';
                 var option = options[i];
+                var classes = ['item'];
+                classes.push(option.classList);
                 if (option.selected) {
-                    this._setSelectedValue(option.value);
-                    selected = 'selected';
+                    this._setSelectedValue(option.value.toString());
+                    classes.push('selected');
                 }
+
                 html += `
-                <li class="${selected} item" data-value="${option.value}">
+                <li class="${classes.join(' ')}" data-value="${option.value}">
                     ${option.text}
                 </li>`;
             }
