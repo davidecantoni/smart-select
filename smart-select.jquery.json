@@ -2,7 +2,7 @@
     "name": "smart-select",
     "title": "Smart Select",
     "description": "Smart select is replacing and beautifying standard selects while keeping them async",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "author": {
         "name": "Davide Cantoni",
         "url": "https://github.com/davidecantoni"

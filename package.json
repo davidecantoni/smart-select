@@ -1,6 +1,6 @@
 {
   "name": "smart-select",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Smart select is replacing and beautifying standard selects while keeping them async",
   "main": "src/js/smart-select.js",
   "directories": {
