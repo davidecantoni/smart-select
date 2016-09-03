@@ -8,13 +8,39 @@
   },
   "scripts": {
     "start": "gulp",
-    "test": "karma start karma.conf.js"
+    "test": "karma start karma.conf.js",
+    "lint": "eslint src/js/smart-select.js"
+  },
+  "eslintConfig": {
+    "extends": "airbnb-base/legacy",
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    },
+    "env": {
+      "browser": true,
+      "es6": true,
+      "node": true
+    },
+    "rules": {
+      "no-underscore-dangle": 0,
+      "func-names": 0
+    },
+    "globals": {
+      "define": false,
+      "$": false
+    }
   },
   "dependencies": {
     "gulp-header": "^1.7.1"
   },
   "devDependencies": {
     "babel": "^5.8.23",
+    "babel-eslint": "^6.1.2",
+    "eslint": "^3.4.0",
+    "eslint-config-airbnb-base": "^5.0.3",
+    "eslint-plugin-import": "^1.14.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
     "gulp-connect": "^2.2.0",
